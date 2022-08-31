@@ -10,12 +10,12 @@
 # beginning of the download until now. Return an integer representing the number of minutes
 # remaining. Z is an integer. You may assume that all the values are reasonable.
 # Example:
-# 1. X=100, B= (10,6,6,8], Z=2
+# 1. X=100, B= [10,6,6,8], Z=2
 # 30 bytes = 10+6+6+8 have been downloaded.
 # So 70 bytes remain.
 # The average of the last two minutes (Z=2) is 7=(6+8)/2.
 # The function should return 10 minutes (70/7).
-# 2. X=10, B=[2,3), Z=2
+# 2. X=10, B=[2,3], Z=2
 # 5 bytes = 2+3 have been downloaded.
 # So 5 bytes remain.
 # The average of the last two minutes (Z=2) is 2.5=(2+3)/2.
@@ -28,6 +28,8 @@
 # * If you are unable to produce an estimate, return -1.
 
 import math
+import statistics
+
 def solution(X, B, Z):
     if(Z > 0):
         total_downloaded = 0
@@ -47,7 +49,13 @@ def solution(X, B, Z):
     else:
         return -1
 
-print(solution(10, [2,3], 2))
+# print(solution(10, [2,3], 2))
+
+def calc(X, B, Z):
+    avg = statistics.mean(B);
+    return math.ceil((X-sum(B))/avg)
+
+# print(calc(10, [2,3], 2))
 
 
 
@@ -107,9 +115,29 @@ def solution2(X):
             result = f'{hours_count}h{seconds_count}s'
         return result
 
-print(solution2(100))
+# print(solution2(100))
+
+timenames = [["s",60],["m",60],["h",24],["d",7],["w",0]]
+
+def timeSimplification(x):
+    primaryMeasurementUnitIndex = 0
+    secondaryMeasurementAmount = 0
+    remainingTime = x
+
+    while remainingTime > timenames[primaryMeasurementUnitIndex][1]:
+        secondaryMeasurementAmount = remainingTime%timenames[primaryMeasurementUnitIndex][1]
+        remainingTime = remainingTime/timenames[primaryMeasurementUnitIndex][1]
+        primaryMeasurementUnitIndex +=1
+    if (secondaryMeasurementAmount > 0):
+        # return primaryMeasurementUnitIndex + timenames[primaryMeasurementUnitIndex[0]]
+        return f'{primaryMeasurementUnitIndex} {timenames[primaryMeasurementUnitIndex][0]}'
+
+    else:
+        # return primaryMeasurementUnitIndex + timenames[primaryMeasurementUnitIndex[0]] + secondaryMeasurementUnitIndex + timenames[(primaryMeasurementUnitIndex-1)[0]]
+        return f'{primaryMeasurementUnitIndex} + {timenames[primaryMeasurementUnitIndex][0]} + {secondaryMeasurementUnitIndex} + {timenames[(primaryMeasurementUnitIndex-1)][0]}'
 
 
+print(print(timeSimplification(100)))
 
 # An internal unit of company XYZ provides services to other departments,
 # 2
